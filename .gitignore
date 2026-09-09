@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.env
+.env.local
+*.log
+
+# Evidence: demo runs are committed deliberately (see README).
+# Everything else a local run produces stays out.
+evidence/*
+!evidence/.gitkeep
+!evidence/demo-*/
+
+# Playwright
+test-results/
+playwright-report/
+.playwright/
