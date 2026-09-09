@@ -18,6 +18,6 @@
     "declaration": true,
     "sourceMap": true
   },
-  "include": ["src/**/*.ts", "fixtures/**/*.ts", "tests/**/*.ts"],
+  "include": ["src/**/*.ts", "fixtures/**/*.ts", "tests/**/*.ts", "scripts/**/*.ts"],
   "exclude": ["node_modules", "dist", "evidence"]
 }

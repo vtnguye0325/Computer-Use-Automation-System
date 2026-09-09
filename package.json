@@ -16,7 +16,8 @@
     "app": "tsx fixtures/app/server.ts",
     "cli": "tsx src/cli.ts",
     "schema:emit": "tsx src/schema/emit.ts",
-    "postinstall": "playwright install chromium"
+    "postinstall": "playwright install chromium",
+    "surface:demo": "tsx scripts/surface-demo.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.68.0",

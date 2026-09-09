@@ -339,10 +339,14 @@ export interface PlaywrightSurfaceOptions {
 export function createPlaywrightSurface(o: PlaywrightSurfaceOptions): Promise<PlaywrightSurface>;
 ```
 
-**Perception.** Walk every frame. For each frame, call
-`page.accessibility.snapshot({ interestingOnly: false })`, flatten it to
+**Perception.** Walk every frame. **Decision changed during Phase 2:** the plan first called
+for `page.accessibility.snapshot({ interestingOnly: false })`. That snapshot carries neither a
+frame path nor a bounding box, and `labelAnchor` is decided by geometry. So each frame is walked
+in the page and every node is normalized to the same role/name/value shape an accessibility API
+reports, plus a box. The DOM stays inside `src/surface/`. Flatten the result to
 `PerceivedElement[]`, and stamp `framePath` on every node. Assign each node a stable `ref`
-of the form `f0/n17`. Attach the bounding box only for nodes that a coordinate fallback
+of the form `f0/n17`, and stamp it on the node as `data-cuas-ref`, so a `ref` turns back into an
+actionable locator without a selector. Attach the bounding box only for nodes that a coordinate fallback
 could need, because boxes make the observation large and the model does not need them.
 
 **Resolution.** One matcher per strategy, all operating on the flattened observation, not
