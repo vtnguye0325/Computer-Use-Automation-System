@@ -13,7 +13,8 @@ with no model in the decision loop.
 ## Setup
 
 ```bash
-npm install
+npm install                     # postinstall runs `playwright install chromium`
+npx playwright install chromium # run this by hand if you skipped scripts
 cp .env.example .env      # add ANTHROPIC_API_KEY for discovery runs only
 npm run typecheck
 npm test

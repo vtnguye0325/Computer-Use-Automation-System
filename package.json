@@ -4,16 +4,19 @@
   "private": true,
   "description": "LLM discovers a UI flow once, then replays it deterministically as a typed capability.",
   "type": "module",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "eslint src fixtures tests --ext .ts",
+    "lint": "eslint .",
     "app": "tsx fixtures/app/server.ts",
     "cli": "tsx src/cli.ts",
-    "schema:emit": "tsx src/schema/emit.ts"
+    "schema:emit": "tsx src/schema/emit.ts",
+    "postinstall": "playwright install chromium"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.68.0",
@@ -21,7 +24,8 @@
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "playwright": "^1.56.0",
-    "zod": "^4.1.12"
+    "zod": "^4.1.12",
+    "yaml": "^2.8.1"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
@@ -31,7 +35,6 @@
     "eslint": "^9.37.0",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
-    "vitest": "^3.2.4",
-    "zod-to-json-schema": "^3.24.6"
+    "vitest": "^3.2.4"
   }
 }
