@@ -1,0 +1,340 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Computer-Use Automation System",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1390,
+      610
+    ],
+    "views": [
+      {
+        "id": "record",
+        "label": "Record once",
+        "focus": [
+          "model",
+          "discovery",
+          "compiler",
+          "capability"
+        ],
+        "note": "The model drives the real UI once, and the compiler turns that run into a typed artifact."
+      },
+      {
+        "id": "replay",
+        "label": "Replay forever",
+        "focus": [
+          "caller",
+          "capability",
+          "replay",
+          "surface",
+          "app"
+        ],
+        "note": "Replay reads the artifact and runs it with no model in the decision loop."
+      },
+      {
+        "id": "guardrails",
+        "label": "Shared guardrails",
+        "focus": [
+          "policy",
+          "recorder",
+          "broker"
+        ],
+        "note": "Both lanes pass one policy check, one evidence recorder, and one control flag."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "model",
+      "type": "external",
+      "label": "claude-opus-5",
+      "sublabel": "tool calling",
+      "pos": [
+        40,
+        70
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "discovery",
+      "type": "backend",
+      "label": "Discovery Loop",
+      "sublabel": "observe, decide, act",
+      "pos": [
+        320,
+        70
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "compiler",
+      "type": "backend",
+      "label": "Compiler",
+      "sublabel": "run to artifact",
+      "pos": [
+        600,
+        70
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "capability",
+      "type": "database",
+      "label": "Capability",
+      "sublabel": "capabilities/*.json",
+      "tag": "typed, versioned",
+      "pos": [
+        880,
+        70
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "caller",
+      "type": "external",
+      "label": "Calling Agent",
+      "sublabel": "supplies inputs",
+      "pos": [
+        1160,
+        70
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "replay",
+      "type": "backend",
+      "label": "Replay Engine",
+      "sublabel": "step loop, four statuses",
+      "tag": "no model",
+      "pos": [
+        880,
+        215
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "recorder",
+      "type": "database",
+      "label": "Evidence Recorder",
+      "sublabel": "evidence/<runId>/",
+      "pos": [
+        1160,
+        215
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "policy",
+      "type": "security",
+      "label": "Policy Engine",
+      "sublabel": "policy.yaml",
+      "tag": "fail closed",
+      "pos": [
+        600,
+        360
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "surface",
+      "type": "backend",
+      "label": "Surface",
+      "sublabel": "Playwright or desktop",
+      "tag": "the seam",
+      "pos": [
+        880,
+        360
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "app",
+      "type": "external",
+      "label": "Back Office App",
+      "sublabel": "legacy frameset UI",
+      "pos": [
+        1160,
+        360
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "broker",
+      "type": "security",
+      "label": "Session Broker",
+      "sublabel": "automation or human",
+      "pos": [
+        880,
+        505
+      ],
+      "size": [
+        150,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "security-group",
+      "label": "One choke point for each concern",
+      "wraps": [
+        "policy",
+        "surface",
+        "broker"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "model-drives",
+      "from": "model",
+      "to": "discovery",
+      "label": "closed action union",
+      "labelDy": -26
+    },
+    {
+      "id": "trace-out",
+      "from": "discovery",
+      "to": "compiler",
+      "label": "step trace",
+      "labelDy": -26
+    },
+    {
+      "id": "compile",
+      "from": "compiler",
+      "to": "capability",
+      "label": "lint and verify",
+      "variant": "emphasis",
+      "labelDy": -26
+    },
+    {
+      "id": "read-artifact",
+      "from": "capability",
+      "to": "replay",
+      "label": "read, no model",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDx": 70,
+      "labelDy": 30
+    },
+    {
+      "id": "invoke",
+      "from": "caller",
+      "to": "replay",
+      "label": "inputs, typed result",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "write-evidence",
+      "from": "replay",
+      "to": "recorder",
+      "label": "redacted events",
+      "labelDy": -26
+    },
+    {
+      "id": "act",
+      "from": "replay",
+      "to": "surface",
+      "label": "act and observe",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDx": 70,
+      "labelDy": 30
+    },
+    {
+      "id": "drive-app",
+      "from": "surface",
+      "to": "app",
+      "label": "accessibility tree",
+      "labelDy": -26
+    },
+    {
+      "id": "discovery-check",
+      "from": "discovery",
+      "to": "policy",
+      "label": "check each action",
+      "variant": "security",
+      "fromSide": "bottom",
+      "toSide": "left"
+    },
+    {
+      "id": "replay-check",
+      "from": "replay",
+      "to": "policy",
+      "label": "check each action",
+      "variant": "security",
+      "fromSide": "left",
+      "toSide": "top"
+    },
+    {
+      "id": "who-drives",
+      "from": "broker",
+      "to": "surface",
+      "label": "asserts who drives",
+      "variant": "security",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "labelDx": 80
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Record once",
+      "items": [
+        "The model drives the real UI through the same action union that replay runs",
+        "The compiler turns literal values into typed inputs"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Replay forever",
+      "items": [
+        "No model in the decision loop, so each run is reproducible",
+        "Targets resolve through an ordered strategy ladder, and ambiguity stops the run"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Shared guardrails",
+      "items": [
+        "One policy check for both lanes; an unclassified action counts as irreversible",
+        "The recorder redacts at its boundary, so no caller redacts by hand"
+      ]
+    }
+  ]
+}
